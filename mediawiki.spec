@@ -5,7 +5,7 @@ Version:	1.3.9
 Release:	1
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://voxel.dl.sourceforge.net/sourceforge/wikipedia/%{name}-%{version}.tar.gz
+Source0:	http://dl.sourceforge.net/wikipedia/%{name}-%{version}.tar.gz
 # Source0-md5:	3fbd3add87575918c282b4a285657dde
 Source1:	%{name}.conf
 URL:		http://wikipedia.sourceforge.net/
@@ -35,7 +35,6 @@ rm -rf PHPTAL*
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{wikiroot} \
 	$RPM_BUILD_ROOT{%{_sysconfdir},/etc/httpd}
-
 
 dirs="languages \
 irc \
