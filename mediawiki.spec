@@ -1,18 +1,18 @@
 %include        /usr/lib/rpm/macros.php
 
-Summary:	MediaWiki is the collaborative editing software that runs Wikipedia
-#Summary(pl):	-
+Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
+Summary(pl):	MediaWiki - oprogramowanie do wspólnej edycji, na którym dzia³a Wikipedia
 Name:		mediawiki
 Version:	1.3.2
 Release:	1
 License:	GPL
 # What group is it?
 Group:		Noidea
-Source0:	http://heanet.dl.sourceforge.net/sourceforge/wikipedia/%{name}-%{version}.tar.gz
+Source0:	http://dl.sourceforge.net/wikipedia/%{name}-%{version}.tar.gz
 # Source0-md5:	0ee835212c32415497d7bdd50b596ae7
 URL:		http://wikipedia.sourceforge.net/
-Requires:	httpd
 Requires:	PHPTAL
+Requires:	httpd
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define         wikiroot        /home/services/httpd/html/mediawiki
@@ -22,7 +22,10 @@ MediaWiki is the collaborative editing software that runs Wikipedia,
 for a list of features please consult:
 http://meta.wikimedia.org/wiki/MediaWiki_feature_list
 
-#description -l pl
+description -l pl
+MediaWiki to oprogramowanie do wspólnej edycji, na którym dzia³a
+Wikipedia. Listê mo¿liwo¶ci mo¿na znale¼æ pod adresem:
+http://meta.wikimedia.org/wiki/MediaWiki_feature_list
 
 %prep
 %setup -q
@@ -59,7 +62,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc docs HISTORY INSTALL README RELEASE-NOTES UPGRADE *.sample
 # why do I have a strong feeling that this approach sucks?
 %dir %{wikiroot}
-%attr(770,http,http) %{wikiroot}/config
+%attr(770,root,http) %{wikiroot}/config
 %{wikiroot}/languages
 %{wikiroot}/math
 %{wikiroot}/irc
