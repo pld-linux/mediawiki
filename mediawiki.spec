@@ -1,4 +1,4 @@
-%include        /usr/lib/rpm/macros.php
+%include	/usr/lib/rpm/macros.php
 
 Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl):	MediaWiki - oprogramowanie do wspólnej edycji, na którym dzia³a Wikipedia
@@ -11,15 +11,15 @@ Group:		Noidea
 Source0:	http://voxel.dl.sourceforge.net/sourceforge/wikipedia/%{name}-%{version}.tar.gz
 # Source0-md5:	ed3aa17dcf37edcb1a133344b2bddb35
 # Source0-size:	1681068
-Source1:        %{name}.conf
+Source1:	%{name}.conf
 URL:		http://wikipedia.sourceforge.net/
 BuildRequires:	rpm-php-pearprov
 Requires:	PHPTAL
 Requires:	httpd
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define         wikiroot        %{_datadir}/%{name}
-%define         _sysconfdir     /etc/%{name}
+%define		wikiroot	%{_datadir}/%{name}
+%define		_sysconfdir	/etc/%{name}
 
 %description
 MediaWiki is the collaborative editing software that runs Wikipedia,
@@ -39,7 +39,7 @@ rm -rf PHPTAL*
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{wikiroot} \
-        $RPM_BUILD_ROOT{%{_sysconfdir},/etc/httpd}
+	$RPM_BUILD_ROOT{%{_sysconfdir},/etc/httpd}
 
 
 dirs="languages \
@@ -69,27 +69,27 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 if [ -f /etc/httpd/httpd.conf ] && ! grep -q "^Include.*%{name}.conf" /etc/httpd/httpd.conf; then
-        echo "Include /etc/httpd/%{name}.conf" >> /etc/httpd/httpd.conf
+	echo "Include /etc/httpd/%{name}.conf" >> /etc/httpd/httpd.conf
 elif [ -d /etc/httpd/httpd.conf ]; then
-        ln -sf /etc/httpd/%{name}.conf /etc/httpd/httpd.conf/99_%{name}.conf
+	ln -sf /etc/httpd/%{name}.conf /etc/httpd/httpd.conf/99_%{name}.conf
 fi
 if [ -f /var/lock/subsys/httpd ]; then
-        /usr/sbin/apachectl restart 1>&2
+	/usr/sbin/apachectl restart 1>&2
 fi
 
 %preun
 if [ "$1" = "0" ]; then
-        umask 027
-        if [ -d /etc/httpd/httpd.conf ]; then
-                rm -f /etc/httpd/httpd.conf/99_%{name}.conf
-        else
-                grep -v "^Include.*%{name}.conf" /etc/httpd/httpd.conf > \
-                        /etc/httpd/httpd.conf.tmp
-                mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
-                if [ -f /var/lock/subsys/httpd ]; then
-                        /usr/sbin/apachectl restart 1>&2
-                fi
-        fi
+	umask 027
+	if [ -d /etc/httpd/httpd.conf ]; then
+		rm -f /etc/httpd/httpd.conf/99_%{name}.conf
+	else
+		grep -v "^Include.*%{name}.conf" /etc/httpd/httpd.conf > \
+			/etc/httpd/httpd.conf.tmp
+		mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
+		if [ -f /var/lock/subsys/httpd ]; then
+			/usr/sbin/apachectl restart 1>&2
+		fi
+	fi
 fi
 
 %files
