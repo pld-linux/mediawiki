@@ -12,6 +12,7 @@ Source0:	http://voxel.dl.sourceforge.net/sourceforge/wikipedia/%{name}-%{version
 # Source0-md5:	ed3aa17dcf37edcb1a133344b2bddb35
 # Source0-size:	1681068
 URL:		http://wikipedia.sourceforge.net/
+BuildRequires:	rpm-php-pearprov
 Requires:	PHPTAL
 Requires:	httpd
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
