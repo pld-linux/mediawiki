@@ -3,14 +3,14 @@
 Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl):	MediaWiki - oprogramowanie do wspólnej edycji, na którym dzia³a Wikipedia
 Name:		mediawiki
-Version:	1.3.6
+Version:	1.3.7
 Release:	1
 License:	GPL
 # What group is it?
 Group:		Noidea
-Source0:	http://dl.sourceforge.net/wikipedia/%{name}-%{version}.tar.gz
-# Source0-md5:	b20f2e895f4e983495d5220a7c2ec63e
-# Source0-size:	1681051
+Source0:	http://voxel.dl.sourceforge.net/sourceforge/wikipedia/%{name}-%{version}.tar.gz
+# Source0-md5:	ed3aa17dcf37edcb1a133344b2bddb35
+# Source0-size:	1681068
 URL:		http://wikipedia.sourceforge.net/
 Requires:	PHPTAL
 Requires:	httpd
@@ -72,5 +72,6 @@ rm -rf $RPM_BUILD_ROOT
 %{wikiroot}/images
 %{wikiroot}/extensions
 %{wikiroot}/includes
+%{wikiroot}/install-utils.inc
 %{wikiroot}/templates
 %{wikiroot}/*.ph*
