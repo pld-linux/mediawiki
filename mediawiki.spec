@@ -22,7 +22,7 @@ MediaWiki is the collaborative editing software that runs Wikipedia,
 for a list of features please consult:
 http://meta.wikimedia.org/wiki/MediaWiki_feature_list
 
-description -l pl
+%description -l pl
 MediaWiki to oprogramowanie do wspólnej edycji, na którym dzia³a
 Wikipedia. Listê mo¿liwo¶ci mo¿na znale¼æ pod adresem:
 http://meta.wikimedia.org/wiki/MediaWiki_feature_list
