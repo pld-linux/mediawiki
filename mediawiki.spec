@@ -1,19 +1,14 @@
-%include	/usr/lib/rpm/macros.php
-
 Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl):	MediaWiki - oprogramowanie do wspólnej edycji, na którym dzia³a Wikipedia
 Name:		mediawiki
-Version:	1.3.7
+Version:	1.3.9
 Release:	1
 License:	GPL
-# What group is it?
-Group:		Noidea
+Group:		Applications/WWW
 Source0:	http://voxel.dl.sourceforge.net/sourceforge/wikipedia/%{name}-%{version}.tar.gz
-# Source0-md5:	ed3aa17dcf37edcb1a133344b2bddb35
-# Source0-size:	1681068
+# Source0-md5:	3fbd3add87575918c282b4a285657dde
 Source1:	%{name}.conf
 URL:		http://wikipedia.sourceforge.net/
-BuildRequires:	rpm-php-pearprov
 Requires:	PHPTAL
 Requires:	httpd
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -94,7 +89,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-#%ghost %{wikiroot}/LocalSettings.php 
+#%ghost %{wikiroot}/LocalSettings.php
 %doc docs HISTORY INSTALL README RELEASE-NOTES UPGRADE *.sample
 # why do I have a strong feeling that this approach sucks?
 %dir %{_sysconfdir}
