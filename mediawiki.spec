@@ -24,8 +24,6 @@ http://meta.wikimedia.org/wiki/MediaWiki_feature_list
 
 #description -l pl
 
-
-
 %prep
 %setup -q
 # using system PHPTAL
@@ -47,7 +45,7 @@ includes \
 templates"
 for i in $dirs ;
 do
-cp -rf  ${i} $RPM_BUILD_ROOT%{wikiroot}
+cp -rf ${i} $RPM_BUILD_ROOT%{wikiroot}
 done
 cp img_auth.php index.php install-utils.inc redirect.php \
 	redirect.phtml Version.php wiki.phtml \
@@ -57,5 +55,18 @@ cp img_auth.php index.php install-utils.inc redirect.php \
 rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
+#%ghost %{wikiroot}/LocalSettings.php 
 %doc docs HISTORY INSTALL README RELEASE-NOTES UPGRADE *.sample
-%{wikiroot}
+# why do I have a strong feeling that this approach sucks?
+%dir %{wikiroot}
+%attr(770,http,http) %{wikiroot}/config
+%{wikiroot}/languages
+%{wikiroot}/math
+%{wikiroot}/irc
+%{wikiroot}/maintenance
+%{wikiroot}/stylesheets
+%{wikiroot}/images
+%{wikiroot}/extensions
+%{wikiroot}/includes
+%{wikiroot}/templates
+%{wikiroot}/*.ph*
