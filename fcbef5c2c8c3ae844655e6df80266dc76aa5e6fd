@@ -1,0 +1,4 @@
+- updated to 1.3.9 (fixes input validation vulnerability)
+- belongs to Applications/WWW group
+- droped Source0-size
+- do not use pearprov/pearreq scripts
