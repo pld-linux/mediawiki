@@ -1,20 +1,20 @@
---- ../config/index.php~	2004-10-17 11:33:26.000000000 +0300
-+++ ../config/index.php	2005-05-06 22:20:20.000000000 +0300
-@@ -368,7 +368,7 @@
+--- ./config/index.php~	2005-05-07 00:41:01.325841276 +0300
++++ ./config/index.php	2005-05-07 00:41:03.208531361 +0300
+@@ -427,7 +427,7 @@
  		$wgCommandLineMode = false;
  		chdir( ".." );
  		eval($local);
 -		$wgDBadminuser = "root";
 +		$wgDBadminuser = "mysql";
  		$wgDBadminpassword = $conf->RootPW;
+ 		$wgDBprefix = $conf->DBprefix;
  		$wgCommandLineMode = true;
- 		$wgUseDatabaseMessages = false;	/* FIXME: For database failure */
-@@ -378,7 +378,7 @@
- 		require_once( "../maintenance/InitialiseMessages.inc" );
+@@ -438,7 +438,7 @@
+ 		require_once( "maintenance/InitialiseMessages.inc" );
  
  		$wgTitle = Title::newFromText( "Installation script" );
 -		$wgDatabase = Database::newFromParams( $wgDBserver, "root", $conf->RootPW, "", 1 );
 +		$wgDatabase = Database::newFromParams( $wgDBserver, $wgDBadminuser, $conf->RootPW, "", 1 );
- 		$wgDatabase->mIgnoreErrors = true;
- 		
+ 		$wgDatabase->ignoreErrors(true);
+ 
  		@$myver = mysql_get_server_info( $wgDatabase->mConn );
