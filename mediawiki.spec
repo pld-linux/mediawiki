@@ -12,7 +12,8 @@ Version:	1.4.4
 Release:	0.3
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://dl.sourceforge.net/wikipedia/%{name}-%{version}.tar.gz
+#Source0:	http://dl.sourceforge.net/wikipedia/%{name}-%{version}.tar.gz
+Source0:	%{name}-%{version}.tar.gz
 # Source0-md5:	85553d464041e36b85939810d79f5bf4
 Source1:	%{name}.conf
 Patch0:		%{name}-mysqlroot.patch
