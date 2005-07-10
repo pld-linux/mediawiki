@@ -9,7 +9,7 @@ Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl):	MediaWiki - oprogramowanie do wspólnej edycji, na którym dzia³a Wikipedia
 Name:		mediawiki
 Version:	1.4.6
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://dl.sourceforge.net/wikipedia/%{name}-%{version}.tar.gz
@@ -33,8 +33,8 @@ Requires:	php-pcre
 Requires:	apache >= 1.3.33-2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		wikiroot	%{_datadir}/%{name}
 %define		_sysconfdir	/etc/%{name}
+%define		_appdir		%{_datadir}/%{name}
 
 %description
 MediaWiki is the collaborative editing software that runs Wikipedia,
@@ -71,11 +71,11 @@ rm -f *.phtml
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{wikiroot} \
+install -d $RPM_BUILD_ROOT%{_appdir} \
 	$RPM_BUILD_ROOT%{_sysconfdir}
 
-cp -a config extensions images includes irc languages maintenance math skins $RPM_BUILD_ROOT%{wikiroot}
-cp *.php install-utils.inc $RPM_BUILD_ROOT%{wikiroot}
+cp -a config extensions images includes irc languages maintenance math skins $RPM_BUILD_ROOT%{_appdir}
+cp *.php install-utils.inc $RPM_BUILD_ROOT%{_appdir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache-%{name}.conf
 
@@ -136,24 +136,24 @@ fi
 %doc docs FAQ HISTORY INSTALL README RELEASE-NOTES UPGRADE *.sample tests 
 %dir %attr(750,root,http) %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache-%{name}.conf
-%dir %{wikiroot}
+%dir %{_appdir}
 %attr(770,root,http)
-%{wikiroot}/languages
-%{wikiroot}/math
-%{wikiroot}/irc
-%{wikiroot}/maintenance
-%{wikiroot}/images
-%{wikiroot}/extensions
-%{wikiroot}/skins
-%{wikiroot}/includes
-%{wikiroot}/*.php
+%{_appdir}/languages
+%{_appdir}/math
+%{_appdir}/irc
+%{_appdir}/maintenance
+%{_appdir}/images
+%{_appdir}/extensions
+%{_appdir}/skins
+%{_appdir}/includes
+%{_appdir}/*.php
 
 %files setup
 %defattr(644,root,root,755)
-%dir %attr(775,root,http) %{wikiroot}/config
-%{wikiroot}/install-utils.inc
+%dir %attr(775,root,http) %{_appdir}/config
+%{_appdir}/install-utils.inc
 # it's not configuration file actually.
-%{wikiroot}/config/index.php
+%{_appdir}/config/index.php
 
 # move here, as used only by setup?
 #require_once( "../includes/DefaultSettings.php" );
