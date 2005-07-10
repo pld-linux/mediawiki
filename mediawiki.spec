@@ -8,12 +8,12 @@
 Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl):	MediaWiki - oprogramowanie do wspólnej edycji, na którym dzia³a Wikipedia
 Name:		mediawiki
-Version:	1.4.5
+Version:	1.4.6
 Release:	1
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://dl.sourceforge.net/wikipedia/%{name}-%{version}.tar.gz
-# Source0-md5:	961e3083b1c036a301b24ac4e614b81b
+# Source0-md5:	f4f82bd486756c279f0c1977b290ce3b
 Source1:	%{name}.conf
 Patch0:		%{name}-mysqlroot.patch
 URL:		http://wikipedia.sourceforge.net/
@@ -22,6 +22,7 @@ BuildRequires:	sed >= 4.0
 BuildRequires:	php-cli
 BuildRequires:	php-pear-PhpDocumentor
 %endif
+BuildRequires:	rpmbuild(macros) >= 1.226
 Requires:	php-mysql
 Requires:	php-xml
 Requires:	php-pcre
@@ -81,6 +82,18 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache-%{name}.conf
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%triggerin -- apache1 >= 1.3.33-2
+%apache_config_install -v 1 -c %{_sysconfdir}/apache-%{name}.conf
+
+%triggerun -- apache1 >= 1.3.33-2
+%apache_config_uninstall -v 1
+
+%triggerin -- apache >= 2.0.0
+%apache_config_install -v 2 -c %{_sysconfdir}/apache-%{name}.conf
+
+%triggerun -- apache >= 2.0.0
+%apache_config_uninstall -v 2
+
 %triggerpostun -- %{name} < 1.3.9-1.4
 # migrate from old config location (only apache2, as there was no apache1 support)
 if [ -f /etc/httpd/%{name}.conf.rpmsave ]; then
@@ -115,54 +128,6 @@ if [ -d /etc/httpd/httpd.conf ]; then
 	ln -sf %{_sysconfdir}/apache-%{name}.conf /etc/httpd/httpd.conf/99_%{name}.conf
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%triggerin -- apache1 >= 1.3.33-2
-%{?debug:set -x; echo "triggerin apache1 %{name}-%{version}-%{release} 1:[$1]; 2:[$2]"}
-if [ "$1" = "1" ] && [ "$2" = "1" ] && [ -d /etc/apache/conf.d ]; then
-	ln -sf %{_sysconfdir}/apache-%{name}.conf /etc/apache/conf.d/99_%{name}.conf
-fi
-# restart apache if the config symlink is there
-if [ -L /etc/apache/conf.d/99_%{name}.conf ]; then
-	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache restart 1>&2
-	fi
-fi
-
-%triggerun -- apache1 >= 1.3.33-2
-%{?debug:set -x; echo "triggerun apache1 %{name}-%{version}-%{release}: 1:[$1]; 2:[$2]"}
-# remove link if eighter of the packages are gone
-if [ "$1" = "0" ] || [ "$2" = "0" ]; then
-	if [ -L /etc/apache/conf.d/99_%{name}.conf ]; then
-		rm -f /etc/apache/conf.d/99_%{name}.conf
-		if [ -f /var/lock/subsys/apache ]; then
-			/etc/rc.d/init.d/apache restart 1>&2
-		fi
-	fi
-fi
-
-%triggerin -- apache >= 2.0.0
-%{?debug:set -x; echo "triggerin apache2 %{name}-%{version}-%{release}: 1:[$1]; 2:[$2]"}
-if [ "$1" = "1" ] && [ "$2" = "1" ] && [ -d /etc/httpd/httpd.conf ]; then
-	ln -sf %{_sysconfdir}/apache-%{name}.conf /etc/httpd/httpd.conf/99_%{name}.conf
-fi
-# restart apache if the config symlink is there
-if [ -L /etc/httpd/httpd.conf/99_%{name}.conf ]; then
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
-	fi
-fi
-
-%triggerun -- apache >= 2.0.0
-%{?debug:set -x; echo "triggerun apache2 %{name}-%{version}-%{release}: 1:[$1]; 2:[$2]"}
-# remove link if eighter of the packages are gone
-if [ "$1" = "0" ] || [ "$2" = "0" ]; then
-	if [ -L /etc/httpd/httpd.conf/99_%{name}.conf ]; then
-		rm -f /etc/httpd/httpd.conf/99_%{name}.conf
-		if [ -f /var/lock/subsys/httpd ]; then
-			/etc/rc.d/init.d/httpd restart 1>&2
-		fi
 	fi
 fi
 
