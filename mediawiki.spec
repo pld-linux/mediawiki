@@ -8,12 +8,12 @@
 Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl):	MediaWiki - oprogramowanie do wspólnej edycji, na którym dzia³a Wikipedia
 Name:		mediawiki
-Version:	1.4.6
-Release:	2
+Version:	1.4.7
+Release:	0.3
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://dl.sourceforge.net/wikipedia/%{name}-%{version}.tar.gz
-# Source0-md5:	f4f82bd486756c279f0c1977b290ce3b
+# Source0-md5:	2ec40b5e53ad1eb762e39b502da247f9
 Source1:	%{name}.conf
 Patch0:		%{name}-mysqlroot.patch
 URL:		http://wikipedia.sourceforge.net/
@@ -77,30 +77,49 @@ install -d $RPM_BUILD_ROOT%{_appdir} \
 cp -a config extensions images includes irc languages maintenance math skins $RPM_BUILD_ROOT%{_appdir}
 cp *.php install-utils.inc $RPM_BUILD_ROOT%{_appdir}
 
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache-%{name}.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %triggerin -- apache1 >= 1.3.33-2
-%apache_config_install -v 1 -c %{_sysconfdir}/apache-%{name}.conf
+%apache_config_install -v 1 -c %{_sysconfdir}/apache.conf
 
 %triggerun -- apache1 >= 1.3.33-2
 %apache_config_uninstall -v 1
 
 %triggerin -- apache >= 2.0.0
-%apache_config_install -v 2 -c %{_sysconfdir}/apache-%{name}.conf
+%apache_config_install -v 2 -c %{_sysconfdir}/apache.conf
 
 %triggerun -- apache >= 2.0.0
 %apache_config_uninstall -v 2
 
+%triggerpostun -- %{name} < 1.4.7-0.2
+if [ -f %{_sysconfdir}/apache-%{name}.conf.rpmsave ]; then
+	cp -f %{_sysconfdir}/apache.conf{,.rpmnew}
+	mv -f %{_sysconfdir}/apache{-%{name}.conf.rpmsave,.conf}
+
+	if [ -L /etc/httpd/httpd.conf/99_%{name}.conf ]; then
+		ln -sf %{_sysconfdir}/apache.conf /etc/httpd/httpd.conf/99_%{name}.conf
+		if [ -f /var/lock/subsys/httpd ]; then
+			/etc/rc.d/init.d/httpd reload 1>&2
+		fi
+	fi
+	if [ -L /etc/apache/conf.d/99_%{name}.conf ]; then
+		ln -sf %{_sysconfdir}/apache.conf /etc/apache/conf.d/99_%{name}.conf
+		if [ -f /var/lock/subsys/apache ]; then
+			/etc/rc.d/init.d/apache reload 1>&2
+		fi
+	fi
+fi
+
 %triggerpostun -- %{name} < 1.3.9-1.4
 # migrate from old config location (only apache2, as there was no apache1 support)
 if [ -f /etc/httpd/%{name}.conf.rpmsave ]; then
-	cp -f %{_sysconfdir}/apache-%{name}.conf{,.rpmnew}
-	mv -f /etc/httpd/%{name}.conf.rpmsave %{_sysconfdir}/apache-%{name}.conf
+	cp -f %{_sysconfdir}/apache.conf{,.rpmnew}
+	mv -f /etc/httpd/%{name}.conf.rpmsave %{_sysconfdir}/apache.conf
 	if [ -f /var/lock/subsys/httpd ]; then
-		/usr/sbin/apachectl restart 1>&2
+		/usr/sbin/apachectl reload 1>&2
 	fi
 fi
 
@@ -111,23 +130,23 @@ if [ ! -d /etc/httpd/httpd.conf ]; then
 		/etc/httpd/httpd.conf.tmp
 	mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
 	if [ -f /var/lock/subsys/httpd ]; then
-		/usr/sbin/apachectl restart 1>&2
+		/usr/sbin/apachectl reload 1>&2
 	fi
 fi
 
 # place new config location, as trigger put config only on first install, do it here.
 # apache1
 if [ -d /etc/apache/conf.d ]; then
-	ln -sf %{_sysconfdir}/apache-%{name}.conf /etc/apache/conf.d/99_%{name}.conf
+	ln -sf %{_sysconfdir}/apache.conf /etc/apache/conf.d/99_%{name}.conf
 	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache restart 1>&2
+		/etc/rc.d/init.d/apache reload 1>&2
 	fi
 fi
 # apache2
 if [ -d /etc/httpd/httpd.conf ]; then
-	ln -sf %{_sysconfdir}/apache-%{name}.conf /etc/httpd/httpd.conf/99_%{name}.conf
+	ln -sf %{_sysconfdir}/apache.conf /etc/httpd/httpd.conf/99_%{name}.conf
 	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd restart 1>&2
+		/etc/rc.d/init.d/httpd reload 1>&2
 	fi
 fi
 
@@ -135,7 +154,7 @@ fi
 %defattr(644,root,root,755)
 %doc docs FAQ HISTORY INSTALL README RELEASE-NOTES UPGRADE *.sample tests 
 %dir %attr(750,root,http) %{_sysconfdir}
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache-%{name}.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
 %dir %{_appdir}
 %attr(770,root,http)
 %{_appdir}/languages
