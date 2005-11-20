@@ -30,7 +30,8 @@ Requires:	php-pcre
 #Requires:	php-zlib
 #Requires:	ImageMagick or php-gd for thumbnails
 #Requires:	turck-mmcache
-Requires:	apache >= 1.3.33-2
+Requires:	webserver = apache
+Conflicts:	apache < 1.3.33-2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/%{name}
