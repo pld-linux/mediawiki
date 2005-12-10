@@ -1,28 +1,28 @@
 # TODO
-# - subpackage -setup (like eventum) for installation phase
-# - secure webpages and dirs
+# - secure webpages and dirs (separate htdocs and includes)
 #
 # Conditional build:
-%bcond_with	docs	# with docs
+%bcond_with	apidocs	# with apidocs
 #
 Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl):	MediaWiki - oprogramowanie do wspólnej edycji, na którym dzia³a Wikipedia
 Name:		mediawiki
-Version:	1.4.12
-Release:	0.1
+Version:	1.5.3
+Release:	0.13
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://dl.sourceforge.net/wikipedia/%{name}-%{version}.tar.gz
-# Source0-md5:	246aa2a830b63f5be48fc7ad499fc3ca
+# Source0-md5:	fc697787f04208d1842a2c646deca626
 Source1:	%{name}.conf
 Patch0:		%{name}-mysqlroot.patch
+Patch1:		%{name}-confdir2.patch
 URL:		http://wikipedia.sourceforge.net/
 BuildRequires:	sed >= 4.0
-%if %{with docs}
+%if %{with apidocs}
 BuildRequires:	php-cli
 BuildRequires:	php-pear-PhpDocumentor
 %endif
-BuildRequires:	rpmbuild(macros) >= 1.226
+BuildRequires:	rpmbuild(macros) >= 1.264
 Requires:	php-mysql
 Requires:	php-xml
 Requires:	php-pcre
@@ -30,12 +30,14 @@ Requires:	php-pcre
 #Requires:	php-zlib
 #Requires:	ImageMagick or php-gd for thumbnails
 #Requires:	turck-mmcache
+Requires:	webapps
 Requires:	webserver = apache
-Conflicts:	apache < 1.3.33-2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_sysconfdir	/etc/%{name}
 %define		_appdir		%{_datadir}/%{name}
+%define		_webapps	/etc/webapps
+%define		_webapp		%{name}
+%define		_sysconfdir	%{_webapps}/%{_webapp}
 
 %description
 MediaWiki is the collaborative editing software that runs Wikipedia,
@@ -66,120 +68,130 @@ pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
-# obsolete files
-rm -f *.phtml
+find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_appdir} \
-	$RPM_BUILD_ROOT%{_sysconfdir}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}}
 
-cp -a config extensions images includes irc languages maintenance math skins $RPM_BUILD_ROOT%{_appdir}
+cp -a config extensions images includes languages maintenance math skins $RPM_BUILD_ROOT%{_appdir}
+cp -a AdminSettings.sample $RPM_BUILD_ROOT%{_sysconfdir}/AdminSettings.php
+
 cp *.php install-utils.inc $RPM_BUILD_ROOT%{_appdir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%triggerin -- apache1 >= 1.3.33-2
-%apache_config_install -v 1 -c %{_sysconfdir}/apache.conf
+%post setup
+chmod 770 %{_sysconfdir}
 
-%triggerun -- apache1 >= 1.3.33-2
-%apache_config_uninstall -v 1
+%postun setup
+if [ "$1" = "0" ]; then
+	chmod 750 %{_sysconfdir}
+fi
+
+%triggerin -- apache1
+%webapp_register apache %{_webapp}
+
+%triggerun -- apache1
+%webapp_unregister apache %{_webapp}
 
 %triggerin -- apache >= 2.0.0
-%apache_config_install -v 2 -c %{_sysconfdir}/apache.conf
+%webapp_register httpd %{_webapp}
 
 %triggerun -- apache >= 2.0.0
-%apache_config_uninstall -v 2
+%webapp_unregister httpd %{_webapp}
 
-%triggerpostun -- %{name} < 1.4.7-0.2
-if [ -f %{_sysconfdir}/apache-%{name}.conf.rpmsave ]; then
-	cp -f %{_sysconfdir}/apache.conf{,.rpmnew}
-	mv -f %{_sysconfdir}/apache{-%{name}.conf.rpmsave,.conf}
-
-	if [ -L /etc/httpd/httpd.conf/99_%{name}.conf ]; then
-		ln -sf %{_sysconfdir}/apache.conf /etc/httpd/httpd.conf/99_%{name}.conf
-		if [ -f /var/lock/subsys/httpd ]; then
-			/etc/rc.d/init.d/httpd reload 1>&2
-		fi
-	fi
-	if [ -L /etc/apache/conf.d/99_%{name}.conf ]; then
-		ln -sf %{_sysconfdir}/apache.conf /etc/apache/conf.d/99_%{name}.conf
-		if [ -f /var/lock/subsys/apache ]; then
-			/etc/rc.d/init.d/apache reload 1>&2
-		fi
-	fi
+%triggerpostun -- %{name} < 1.5.3-0.2
+# nuke very-old config location (this mostly for Ra)
+if [ -f /etc/httpd/httpd.conf ]; then
+	sed -i -e "/^Include.*%{name}.conf/d" /etc/httpd/httpd.conf
+	/usr/sbin/webapp register httpd %{_webapp}
+	httpd_reload=1
 fi
 
-%triggerpostun -- %{name} < 1.3.9-1.4
-# migrate from old config location (only apache2, as there was no apache1 support)
+# migrate from httpd (apache2) config dir
 if [ -f /etc/httpd/%{name}.conf.rpmsave ]; then
-	cp -f %{_sysconfdir}/apache.conf{,.rpmnew}
-	mv -f /etc/httpd/%{name}.conf.rpmsave %{_sysconfdir}/apache.conf
-	if [ -f /var/lock/subsys/httpd ]; then
-		/usr/sbin/apachectl reload 1>&2
+	cp -f %{_sysconfdir}/httpd.conf{,.rpmnew}
+	mv -f /etc/httpd/%{name}.conf.rpmsave %{_sysconfdir}/httpd.conf
+	/usr/sbin/webapp register httpd %{_webapp}
+	httpd_reload=1
+fi
+
+# migrate from apache-config macros
+if [ -f /etc/%{name}/apache.conf.rpmsave ]; then
+	if [ -d /etc/apache/webapps.d ]; then
+		cp -f %{_sysconfdir}/apache.conf{,.rpmnew}
+		cp -f /etc/%{name}/apache.conf.rpmsave %{_sysconfdir}/apache.conf
+	fi
+
+	if [ -d /etc/httpd/webapps.d ]; then
+		cp -f %{_sysconfdir}/httpd.conf{,.rpmnew}
+		cp -f /etc/%{name}/apache.conf.rpmsave %{_sysconfdir}/httpd.conf
+	fi
+	rm -f /etc/%{name}/apache.conf.rpmsave
+fi
+
+# migrating from earlier apache-config?
+if [ -L /etc/apache/conf.d/99_%{name}.conf ] || [ -L /etc/httpd/httpd.conf/99_%{name}.conf ]; then
+	if [ -L /etc/apache/conf.d/99_%{name}.conf ]; then
+		rm -f /etc/apache/conf.d/99_%{name}.conf
+		/usr/sbin/webapp register apache %{_webapp}
+		apache_reload=1
+	fi
+	if [ -L /etc/httpd/httpd.conf/99_%{name}.conf ]; then
+		rm -f /etc/httpd/httpd.conf/99_%{name}.conf
+		/usr/sbin/webapp register httpd %{_webapp}
+		httpd_reload=1
+	fi
+else
+	# no earlier registration. assume migration from Ra
+	if [ -d /etc/apache/webapps.d ]; then
+		/usr/sbin/webapp register apache %{_webapp}
+		apache_reload=1
+	fi
+	if [ -d /etc/httpd/webapps.d ]; then
+		/usr/sbin/webapp register httpd %{_webapp}
+		httpd_reload=1
 	fi
 fi
 
-# nuke very-old config location (is this needed?)
-umask 027
-if [ ! -d /etc/httpd/httpd.conf ]; then
-	grep -v "^Include.*%{name}.conf" /etc/httpd/httpd.conf > \
-		/etc/httpd/httpd.conf.tmp
-	mv -f /etc/httpd/httpd.conf.tmp /etc/httpd/httpd.conf
-	if [ -f /var/lock/subsys/httpd ]; then
-		/usr/sbin/apachectl reload 1>&2
-	fi
-fi
-
-# place new config location, as trigger put config only on first install, do it here.
-# apache1
-if [ -d /etc/apache/conf.d ]; then
-	ln -sf %{_sysconfdir}/apache.conf /etc/apache/conf.d/99_%{name}.conf
-	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache reload 1>&2
-	fi
-fi
-# apache2
-if [ -d /etc/httpd/httpd.conf ]; then
-	ln -sf %{_sysconfdir}/apache.conf /etc/httpd/httpd.conf/99_%{name}.conf
+if [ "$httpd_reload" ]; then
 	if [ -f /var/lock/subsys/httpd ]; then
 		/etc/rc.d/init.d/httpd reload 1>&2
+	fi
+fi
+if [ "$apache_reload" ]; then
+	if [ -f /var/lock/subsys/apache ]; then
+		/etc/rc.d/init.d/apache reload 1>&2
 	fi
 fi
 
 %files
 %defattr(644,root,root,755)
-%doc docs FAQ HISTORY INSTALL README RELEASE-NOTES UPGRADE *.sample tests 
+%doc docs FAQ HISTORY INSTALL README RELEASE-NOTES UPGRADE *.sample tests
 %dir %attr(750,root,http) %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf
+%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/AdminSettings.php
+
 %dir %{_appdir}
-%attr(770,root,http)
+%{_appdir}/*.php
 %{_appdir}/languages
 %{_appdir}/math
-%{_appdir}/irc
-%{_appdir}/maintenance
 %{_appdir}/images
 %{_appdir}/extensions
 %{_appdir}/skins
 %{_appdir}/includes
-%{_appdir}/*.php
+%{_appdir}/maintenance
 
 %files setup
 %defattr(644,root,root,755)
 %dir %attr(775,root,http) %{_appdir}/config
 %{_appdir}/install-utils.inc
-# it's not configuration file actually.
 %{_appdir}/config/index.php
-
-# move here, as used only by setup?
-#require_once( "../includes/DefaultSettings.php" );
-#require_once( "../includes/MagicWord.php" );
-#require_once( "../includes/Namespace.php" );
-#dbsource( "../maintenance/tables.sql", $wgDatabase );
-#dbsource( "../maintenance/interwiki.sql", $wgDatabase );
-#dbsource( "../maintenance/indexes.sql", $wgDatabase );
-#dbsource( "../maintenance/users.sql", $wgDatabase );
