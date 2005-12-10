@@ -9,12 +9,23 @@
  		$wgDBadminpassword = $conf->RootPW;
  		$wgDBprefix = $conf->DBprefix;
  		$wgCommandLineMode = true;
-@@ -438,7 +438,7 @@
- 		require_once( "maintenance/InitialiseMessages.inc" );
- 
- 		$wgTitle = Title::newFromText( "Installation script" );
+--- ./config/index.php~	2005-12-10 21:58:59.000000000 +0200
++++ ./config/index.php	2005-12-10 22:02:03.000000000 +0200
+@@ -480,14 +480,14 @@
+ 				see <a href='http://dev.mysql.com/doc/mysql/en/old-client.html'
+ 			 	>http://dev.mysql.com/doc/mysql/en/old-client.html</a> for help.</b></li>\n";
+ 		}
+-		print "<li>Trying to connect to MySQL on $wgDBserver as root...\n";
 -		$wgDatabase = Database::newFromParams( $wgDBserver, "root", $conf->RootPW, "", 1 );
-+		$wgDatabase = Database::newFromParams( $wgDBserver, $wgDBadminuser, $conf->RootPW, "", 1 );
- 		$wgDatabase->ignoreErrors(true);
++		print "<li>Trying to connect to MySQL on $wgDBserver as MySQL root...\n";
++		$wgDatabase = Database::newFromParams( $wgDBserver, "mysql", $conf->RootPW, "", 1 );
  
- 		@$myver = mysql_get_server_info( $wgDatabase->mConn );
+ 		if( $wgDatabase->isOpen() ) {
+ 			$myver = mysql_get_server_info( $wgDatabase->mConn );
+ 			$wgDatabase->ignoreErrors(true);
+ 			$conf->Root = true;
+-			print "<ul><li>Connected as root (automatic)</li></ul></li>\n";
++			print "<ul><li>Connected as MySQL root (automatic)</li></ul></li>\n";
+ 		} else {
+ 			print "<ul><li>MySQL error " . ($err = mysql_errno() ) .
+ 				": " . htmlspecialchars( mysql_error() ) . "</li></ul></li>";
