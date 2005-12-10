@@ -93,6 +93,10 @@ chmod 770 %{_sysconfdir}
 %postun setup
 if [ "$1" = "0" ]; then
 	chmod 750 %{_sysconfdir}
+	if [ -f %{_sysconfdir}/LocalSettings.php ]; then
+		chown root:http %{_sysconfdir}/LocalSettings.php
+		chmod 640 %{_sysconfdir}/LocalSettings.php
+	fi
 fi
 
 %triggerin -- apache1
