@@ -8,12 +8,12 @@
 Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl):	MediaWiki - oprogramowanie do wspólnej edycji, na którym dzia³a Wikipedia
 Name:		mediawiki
-Version:	1.4.7
-Release:	0.3
+Version:	1.4.12
+Release:	0.1
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://dl.sourceforge.net/wikipedia/%{name}-%{version}.tar.gz
-# Source0-md5:	2ec40b5e53ad1eb762e39b502da247f9
+# Source0-md5:	246aa2a830b63f5be48fc7ad499fc3ca
 Source1:	%{name}.conf
 Patch0:		%{name}-mysqlroot.patch
 URL:		http://wikipedia.sourceforge.net/
