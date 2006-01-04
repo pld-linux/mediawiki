@@ -8,7 +8,7 @@ Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl):	MediaWiki - oprogramowanie do wspólnej edycji, na którym dzia³a Wikipedia
 Name:		mediawiki
 Version:	1.5.3
-Release:	2
+Release:	3
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://dl.sourceforge.net/wikipedia/%{name}-%{version}.tar.gz
@@ -22,15 +22,15 @@ BuildRequires:	sed >= 4.0
 BuildRequires:	php-cli
 BuildRequires:	php-pear-PhpDocumentor
 %endif
-BuildRequires:	rpmbuild(macros) >= 1.264
+BuildRequires:	rpmbuild(macros) >= 1.268
 Requires:	php-mysql
-Requires:	php-xml
 Requires:	php-pcre
+Requires:	php-xml
 # includes/UserMailer.php:
 #Requires:	php-pear-Mail
 # Optional
-#Requires:	php-zlib
 #Requires:	ImageMagick or php-gd for thumbnails
+#Requires:	php-zlib
 #Requires:	turck-mmcache
 Requires:	webapps
 Requires:	webserver = apache
@@ -55,7 +55,7 @@ Wikipedia. Listê mo¿liwo¶ci mo¿na znale¼æ pod adresem:
 Summary:	MediaWiki setup package
 Summary(pl):	Pakiet do wstêpnej konfiguracji MediaWiki
 Group:		Applications/WWW
-PreReq:		%{name} = %{epoch}:%{version}-%{release}
+Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description setup
 Install this package to configure initial MediaWiki installation. You
@@ -63,8 +63,8 @@ should uninstall this package when you're done, as it considered
 insecure to keep the setup files in place.
 
 %description setup -l pl
-Ten pakiet nale¿y zainstalowaæ w celu wstêpnej konfiguracji MediaWiki po
-pierwszej instalacji. Potem nale¿y go odinstalowaæ, jako ¿e
+Ten pakiet nale¿y zainstalowaæ w celu wstêpnej konfiguracji MediaWiki
+po pierwszej instalacji. Potem nale¿y go odinstalowaæ, jako ¿e
 pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
 
 %prep
@@ -168,14 +168,10 @@ else
 fi
 
 if [ "$httpd_reload" ]; then
-	if [ -f /var/lock/subsys/httpd ]; then
-		/etc/rc.d/init.d/httpd reload 1>&2
-	fi
+	%service httpd reload
 fi
 if [ "$apache_reload" ]; then
-	if [ -f /var/lock/subsys/apache ]; then
-		/etc/rc.d/init.d/apache reload 1>&2
-	fi
+	%service apache reload
 fi
 
 %files
