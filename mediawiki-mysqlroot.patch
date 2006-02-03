@@ -9,23 +9,14 @@
  		$wgDBadminpassword = $conf->RootPW;
  		$wgDBprefix = $conf->DBprefix;
  		$wgCommandLineMode = true;
---- ./config/index.php~	2005-12-10 21:58:59.000000000 +0200
-+++ ./config/index.php	2005-12-10 22:02:03.000000000 +0200
-@@ -480,14 +480,14 @@
- 				see <a href='http://dev.mysql.com/doc/mysql/en/old-client.html'
- 			 	>http://dev.mysql.com/doc/mysql/en/old-client.html</a> for help.</b></li>\n";
- 		}
--		print "<li>Trying to connect to MySQL on $wgDBserver as root...\n";
--		$wgDatabase = Database::newFromParams( $wgDBserver, "root", $conf->RootPW, "", 1 );
-+		print "<li>Trying to connect to MySQL on $wgDBserver as MySQL root...\n";
-+		$wgDatabase = Database::newFromParams( $wgDBserver, "mysql", $conf->RootPW, "", 1 );
- 
- 		if( $wgDatabase->isOpen() ) {
- 			$myver = mysql_get_server_info( $wgDatabase->mConn );
- 			$wgDatabase->ignoreErrors(true);
- 			$conf->Root = true;
--			print "<ul><li>Connected as root (automatic)</li></ul></li>\n";
-+			print "<ul><li>Connected as MySQL root (automatic)</li></ul></li>\n";
- 		} else {
- 			print "<ul><li>MySQL error " . ($err = mysql_errno() ) .
- 				": " . htmlspecialchars( mysql_error() ) . "</li></ul></li>";
+--- ./config/index.php~	2006-02-03 19:26:11.000000000 +0200
++++ ./config/index.php	2006-02-03 19:36:19.036054719 +0200
+@@ -383,7 +383,7 @@
+ 	$conf->DBpassword2 = importPost( "DBpassword2" );
+ 	$conf->DBprefix = importPost( "DBprefix" );
+ 	$conf->DBmysql5 = (importPost( "DBmysql5" ) == "true") ? "true" : "false";
+-	$conf->RootUser = importPost( "RootUser", "root" );
++	$conf->RootUser = importPost( "RootUser", "mysql" );
+ 	$conf->RootPW = importPost( "RootPW", "-" );
+ 	$conf->LanguageCode = importPost( "LanguageCode", "en" );
+ 	$conf->SysopName = importPost( "SysopName", "WikiSysop" );
