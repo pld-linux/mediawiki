@@ -88,3 +88,14 @@ diff -u mediawiki-1.5.3/trackback.php mediawiki-1.5.3.confdir2/trackback.php
  require_once('includes/Setup.php');
  
  require_once('Title.php');
+--- mediawiki/config/index.php~ 2006-02-03 19:09:29.000000000 +0100
++++ mediawiki/config/index.php  2006-02-22 21:50:35.499225024 +0100
+@@ -133,7 +133,7 @@
+ 
+ /* Check for existing configurations and bug out! */
+
+-if( file_exists( "../LocalSettings.php" ) ) {
++if( file_exists( "/etc/webapps/mediawiki/LocalSettings.php" ) ) {
+ 	dieout( "<h2>Wiki is configured.</h2>
+ 
+ 	<p>Already configured... <a href='../index.php'>return to the wiki</a>.</p>
