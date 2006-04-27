@@ -1,9 +1,9 @@
---- ./config/index.php~	2005-05-07 00:41:01.325841276 +0300
-+++ ./config/index.php	2005-05-07 00:41:03.208531361 +0300
-@@ -427,7 +427,7 @@
- 		$wgCommandLineMode = false;
- 		chdir( ".." );
- 		eval($local);
+--- mediawiki-1.6.3/config/index.php~	2006-04-27 20:38:23.367393982 +0300
++++ mediawiki-1.6.3/config/index.php	2006-04-27 20:39:12.668492466 +0300
+@@ -494,7 +494,7 @@
+ 		$dbclass = 'Database'.ucfirst($conf->DBtype);
+ 		require_once("$dbclass.php");
+ 		$wgDBtype = $conf->DBtype;
 -		$wgDBadminuser = "root";
 +		$wgDBadminuser = "mysql";
  		$wgDBadminpassword = $conf->RootPW;

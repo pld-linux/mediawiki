@@ -1,4 +1,3 @@
-diff -u mediawiki-1.5.3/img_auth.php mediawiki-1.5.3.confdir2/img_auth.php
 --- mediawiki-1.5.3/img_auth.php	2005-04-16 07:33:33.000000000 +0300
 +++ mediawiki-1.5.3.confdir2/img_auth.php	2005-12-11 00:59:26.000000000 +0200
 @@ -11,7 +11,7 @@
@@ -10,37 +9,35 @@ diff -u mediawiki-1.5.3/img_auth.php mediawiki-1.5.3.confdir2/img_auth.php
  require_once( 'includes/Setup.php' );
  require_once( 'includes/StreamFile.php' );
  
-diff -u mediawiki-1.5.3/index.php mediawiki-1.5.3.confdir2/index.php
---- mediawiki-1.5.3/index.php	2005-11-16 23:29:24.000000000 +0200
-+++ mediawiki-1.5.3.confdir2/index.php	2005-12-11 00:59:26.000000000 +0200
-@@ -16,7 +16,7 @@
- define( 'MEDIAWIKI', true );
- require_once( './includes/Defines.php' );
- 
+--- mediawiki-1.6.3/index.php~	2006-04-27 20:41:16.661255452 +0300
++++ mediawiki-1.6.3/index.php	2006-04-27 20:42:43.373188901 +0300
+@@ -32,7 +32,7 @@
+ # LocalSettings.php is the per site customization file. If it does not exit
+ # the wiki installer need to be launched or the generated file moved from
+ # ./config/ to ./
 -if( !file_exists( 'LocalSettings.php' ) ) {
 +if( !file_exists( '/etc/webapps/mediawiki/LocalSettings.php' ) ) {
- 	$IP = "." ;
+ 	$IP = '.';
  	require_once( 'includes/DefaultSettings.php' ); # used for printing the version
  ?>
-@@ -46,7 +46,7 @@
+@@ -61,7 +61,7 @@
  		<div class='error'>
  		<?php
  		if ( file_exists( 'config/LocalSettings.php' ) ) {
--			echo( "To complete the installation, move <tt>config/LocalSettings.php</tt> to the parent directory." );
-+			echo( "To complete the installation, move <tt>config/LocalSettings.php</tt> to the webapps directory (/etc/webapps/mediawiki)." );
+-			echo( 'To complete the installation, move <tt>config/LocalSettings.php</tt> to the parent directory.' );
++ 			echo( 'To complete the installation, move <tt>config/LocalSettings.php</tt> to the webapps directory (/etc/webapps/mediawiki).' );
  		} else {
- 			echo( "You'll have to <a href='config/index.php' title='setup'>set the wiki up</a> first!" );
+ 			echo( 'Please <a href="config/index.php" title="setup">setup the wiki</a> first.' );
  		}
-@@ -59,7 +59,7 @@
- 	die();
+@@ -75,7 +75,7 @@
  }
  
+ # Include this site setttings
 -require_once( './LocalSettings.php' );
 +require_once( '/etc/webapps/mediawiki/LocalSettings.php' );
+ # Prepare MediaWiki
  require_once( 'includes/Setup.php' );
  
- wfProfileIn( 'main-misc-setup' );
-diff -u mediawiki-1.5.3/profileinfo.php mediawiki-1.5.3.confdir2/profileinfo.php
 --- mediawiki-1.5.3/profileinfo.php	2005-07-06 08:18:09.000000000 +0300
 +++ mediawiki-1.5.3.confdir2/profileinfo.php	2005-12-11 00:59:26.000000000 +0200
 @@ -50,7 +50,7 @@
@@ -52,7 +49,6 @@ diff -u mediawiki-1.5.3/profileinfo.php mediawiki-1.5.3.confdir2/profileinfo.php
  require_once("./AdminSettings.php");
  
  if (!$wgEnableProfileInfo)
-diff -u mediawiki-1.5.3/redirect.php mediawiki-1.5.3.confdir2/redirect.php
 --- mediawiki-1.5.3/redirect.php	2005-06-28 17:28:21.000000000 +0300
 +++ mediawiki-1.5.3.confdir2/redirect.php	2005-12-11 00:59:26.000000000 +0200
 @@ -5,7 +5,7 @@
@@ -64,7 +60,6 @@ diff -u mediawiki-1.5.3/redirect.php mediawiki-1.5.3.confdir2/redirect.php
  global $wgArticlePath;
  
  require_once( 'includes/WebRequest.php' );
-diff -u mediawiki-1.5.3/thumb.php mediawiki-1.5.3.confdir2/thumb.php
 --- mediawiki-1.5.3/thumb.php	2005-08-17 23:08:57.000000000 +0300
 +++ mediawiki-1.5.3.confdir2/thumb.php	2005-12-11 00:59:26.000000000 +0200
 @@ -10,7 +10,7 @@
@@ -76,7 +71,6 @@ diff -u mediawiki-1.5.3/thumb.php mediawiki-1.5.3.confdir2/thumb.php
  require_once( 'GlobalFunctions.php' );
  
  $wgTrivialMimeDetection = true; //don't use fancy mime detection, just check the file extension for jpg/gif/png.
-diff -u mediawiki-1.5.3/trackback.php mediawiki-1.5.3.confdir2/trackback.php
 --- mediawiki-1.5.3/trackback.php	2005-07-23 09:30:23.000000000 +0300
 +++ mediawiki-1.5.3.confdir2/trackback.php	2005-12-11 00:59:26.000000000 +0200
 @@ -12,7 +12,7 @@
@@ -88,14 +82,23 @@ diff -u mediawiki-1.5.3/trackback.php mediawiki-1.5.3.confdir2/trackback.php
  require_once('includes/Setup.php');
  
  require_once('Title.php');
---- mediawiki/config/index.php~ 2006-02-03 19:09:29.000000000 +0100
-+++ mediawiki/config/index.php  2006-02-22 21:50:35.499225024 +0100
-@@ -133,7 +133,7 @@
+--- mediawiki-1.6.3/config/index.php~	2006-04-27 20:39:51.399355450 +0300
++++ mediawiki-1.6.3/config/index.php	2006-04-27 20:40:31.870257219 +0300
+@@ -140,7 +140,7 @@
  
  /* Check for existing configurations and bug out! */
-
+ 
 -if( file_exists( "../LocalSettings.php" ) ) {
 +if( file_exists( "/etc/webapps/mediawiki/LocalSettings.php" ) ) {
- 	dieout( "<h2>Wiki is configured.</h2>
+ 	dieout( "	<p><strong>Setup has completed, <a href='../index.php'>your wiki</a> is configured.</strong></p>
  
- 	<p>Already configured... <a href='../index.php'>return to the wiki</a>.</p>
+ 	<p>Please delete the /config directory for extra security.</p></div></div></div></div>" );
+@@ -1081,7 +1081,7 @@
+ it and uploading it again will hopefully change the ownership to a user ID specific to you.</p>
+ EOT;
+ 	} else {
+-		echo "<p>Installation successful! Move the config/LocalSettings.php file into the parent directory, then follow
++		echo "<p>Installation successful! Move the config/LocalSettings.php file into webapps directory (/etc/webapps/mediawiki), then follow
+ 			<a href='../index.php'>this link</a> to your wiki.</p>\n";
+ 	}
+ }
