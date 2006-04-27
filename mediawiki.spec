@@ -2,17 +2,17 @@
 # - secure webpages and dirs (separate htdocs and includes)
 #
 # Conditional build:
-%bcond_with	apidocs	# with apidocs
+%bcond_with	apidocs	# with apidocs. not finished
 #
 Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl):	MediaWiki - oprogramowanie do wspólnej edycji, na którym dzia³a Wikipedia
 Name:		mediawiki
-Version:	1.5.8
-Release:	1
+Version:	1.6.3
+Release:	0.2
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://dl.sourceforge.net/wikipedia/%{name}-%{version}.tar.gz
-# Source0-md5:	1eef94157377fa8c3d049877a27c0163
+# Source0-md5:	89d0d6a588dce6453fb00a70598c632e
 Source1:	%{name}.conf
 Patch0:		%{name}-mysqlroot.patch
 Patch1:		%{name}-confdir2.patch
@@ -24,16 +24,16 @@ BuildRequires:	php-pear-PhpDocumentor
 %endif
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires:	php-mysql
+Requires:	php-common >= 3:4.3.2
 Requires:	php-pcre
 Requires:	php-xml
 # includes/UserMailer.php:
 #Requires:	php-pear-Mail
 # Optional
-#Requires:	ImageMagick or php-gd for thumbnails
-#Requires:	php-zlib
-#Requires:	turck-mmcache
+#Suggests:	ImageMagick or php-gd for thumbnails
+#Suggests:	php-zlib
+#Suggests:	php-mmcache || php4-mmcache
 Requires:	webapps
-Requires:	webserver = apache
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_appdir		%{_datadir}/%{name}
@@ -56,6 +56,7 @@ Summary:	MediaWiki setup package
 Summary(pl):	Pakiet do wstêpnej konfiguracji MediaWiki
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
+Requires:	php-posix
 
 %description setup
 Install this package to configure initial MediaWiki installation. You
@@ -173,6 +174,12 @@ fi
 if [ "$apache_reload" ]; then
 	%service apache reload
 fi
+
+%triggerpostun -- %{name} < 1.6.0
+%banner -e %{name}-1.6 <<EOF
+You may use command line upgrade script maintenance/update.php to
+upgrade from previous version.
+EOF
 
 %files
 %defattr(644,root,root,755)
