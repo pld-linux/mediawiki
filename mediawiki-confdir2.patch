@@ -102,11 +102,13 @@
  			<a href='../index.php'>this link</a> to your wiki.</p>\n";
  	}
  }
-@@ -1179,6 +1179,8 @@
+@@ -1179,6 +1179,10 @@
  # and their default values, but don't forget to make changes in _this_
  # file, not there.
  
-+define('MW_INSTALL_PATH', '/usr/share/mediawiki');
++if (!defined('MW_INSTALL_PATH')) {
++	define('MW_INSTALL_PATH', '/usr/share/mediawiki');
++}
 +
  # If you customize your file layout, set \$IP to the directory that contains
  # the other MediaWiki files. It will be used as a base to locate files.
