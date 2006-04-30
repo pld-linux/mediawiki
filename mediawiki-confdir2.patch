@@ -82,8 +82,8 @@
  require_once('includes/Setup.php');
  
  require_once('Title.php');
---- mediawiki-1.6.3/config/index.php~	2006-04-27 20:39:51.399355450 +0300
-+++ mediawiki-1.6.3/config/index.php	2006-04-27 20:40:31.870257219 +0300
+--- mediawiki-1.6.3/config/index.php	2006-04-27 20:40:31.870257219 +0300
++++ mediawiki-1.6.3/config/index.php	2006-04-30 16:07:46.418174611 +0300
 @@ -140,7 +140,7 @@
  
  /* Check for existing configurations and bug out! */
@@ -102,3 +102,12 @@
  			<a href='../index.php'>this link</a> to your wiki.</p>\n";
  	}
  }
+@@ -1179,6 +1179,8 @@
+ # and their default values, but don't forget to make changes in _this_
+ # file, not there.
+ 
++define('MW_INSTALL_PATH', '/usr/share/mediawiki');
++
+ # If you customize your file layout, set \$IP to the directory that contains
+ # the other MediaWiki files. It will be used as a base to locate files.
+ if( defined( 'MW_INSTALL_PATH' ) ) {
