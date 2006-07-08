@@ -9,14 +9,14 @@
  		$wgDBadminpassword = $conf->RootPW;
  		$wgDBprefix = $conf->DBprefix;
  		$wgCommandLineMode = true;
---- ./config/index.php~	2006-02-03 19:26:11.000000000 +0200
-+++ ./config/index.php	2006-02-03 19:36:19.036054719 +0200
-@@ -383,7 +383,7 @@
- 	$conf->DBpassword2 = importPost( "DBpassword2" );
- 	$conf->DBprefix = importPost( "DBprefix" );
- 	$conf->DBmysql5 = (importPost( "DBmysql5" ) == "true") ? "true" : "false";
--	$conf->RootUser = importPost( "RootUser", "root" );
-+	$conf->RootUser = importPost( "RootUser", "mysql" );
- 	$conf->RootPW = importPost( "RootPW", "-" );
- 	$conf->LanguageCode = importPost( "LanguageCode", "en" );
- 	$conf->SysopName = importPost( "SysopName", "WikiSysop" );
+--- mediawiki-1.7.0/config/index.php~	2006-07-08 14:05:35.057049314 +0300
++++ mediawiki-1.7.0/config/index.php	2006-07-08 14:06:04.637710603 +0300
+@@ -486,7 +486,7 @@
+ 	## MySQL specific:
+ 	$conf->DBprefix     =  importPost( "DBprefix" );
+ 	$conf->DBmysql5     = (importPost( "DBmysql5" ) == "true") ? "true" : "false";
+-	$conf->RootUser     =  importPost( "RootUser", "root" );
++	$conf->RootUser     =  importPost( "RootUser", "mysql" );
+ 	$conf->RootPW       =  importPost( "RootPW", "-" );
+ 	$conf->LanguageCode =  importPost( "LanguageCode", "en" );
+ 
