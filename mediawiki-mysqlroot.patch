@@ -1,20 +1,11 @@
---- mediawiki-1.8.0/config/index.php~	2006-10-11 09:40:56.193633293 +0300
-+++ mediawiki-1.8.0/config/index.php	2006-10-11 09:44:56.729021763 +0300
-@@ -50,7 +50,7 @@
- $ourdb['mysql']['havedriver']    = 0;
- $ourdb['mysql']['compile']       = 'mysql';
- $ourdb['mysql']['bgcolor']       = '#ffe5a7';
--$ourdb['mysql']['rootuser']      = 'root';
-+$ourdb['mysql']['rootuser']      = 'mysql';
- 
- $ourdb['postgres']['fullname']   = 'PostgreSQL';
- $ourdb['postgres']['havedriver'] = 0;
-@@ -494,7 +494,7 @@
+--- mediawiki-1.9.0/config/index.php~	2007-01-10 23:35:22.257272505 +0200
++++ mediawiki-1.9.0/config/index.php	2007-01-10 23:36:41.239037706 +0200
+@@ -503,7 +503,7 @@
  	$conf->SysopName = importPost( "SysopName", "WikiSysop" );
  	$conf->SysopPass = importPost( "SysopPass" );
  	$conf->SysopPass2 = importPost( "SysopPass2" );
 -	$conf->RootUser = importPost( "RootUser", "root" );
 +	$conf->RootUser = importPost( "RootUser", "mysql" );
- 	$conf->RootPW = importPost( "RootPW", "-" );
+ 	$conf->RootPW = importPost( "RootPW", "" );
+ 	$useRoot = importCheck( 'useroot', false );
  
- 	## MySQL specific:
