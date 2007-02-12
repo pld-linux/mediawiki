@@ -5,7 +5,7 @@
 %bcond_with	apidocs	# with apidocs. not finished
 #
 Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
-Summary(pl):	MediaWiki - oprogramowanie do wspólnej edycji, na którym dzia³a Wikipedia
+Summary(pl.UTF-8):   MediaWiki - oprogramowanie do wspÃ³lnej edycji, na ktÃ³rym dziaÅ‚a Wikipedia
 Name:		mediawiki
 Version:	1.9.1
 Release:	2
@@ -47,14 +47,14 @@ MediaWiki is the collaborative editing software that runs Wikipedia,
 for a list of features please consult:
 <http://meta.wikimedia.org/wiki/MediaWiki_feature_list>.
 
-%description -l pl
-MediaWiki to oprogramowanie do wspólnej edycji, na którym dzia³a
-Wikipedia. Listê mo¿liwo¶ci mo¿na znale¼æ pod adresem:
+%description -l pl.UTF-8
+MediaWiki to oprogramowanie do wspÃ³lnej edycji, na ktÃ³rym dziaÅ‚a
+Wikipedia. ListÄ™ moÅ¼liwoÅ›ci moÅ¼na znaleÅºÄ‡ pod adresem:
 <http://meta.wikimedia.org/wiki/MediaWiki_feature_list>.
 
 %package setup
 Summary:	MediaWiki setup package
-Summary(pl):	Pakiet do wstêpnej konfiguracji MediaWiki
+Summary(pl.UTF-8):   Pakiet do wstÄ™pnej konfiguracji MediaWiki
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php(posix)
@@ -64,10 +64,10 @@ Install this package to configure initial MediaWiki installation. You
 should uninstall this package when you're done, as it considered
 insecure to keep the setup files in place.
 
-%description setup -l pl
-Ten pakiet nale¿y zainstalowaæ w celu wstêpnej konfiguracji MediaWiki
-po pierwszej instalacji. Potem nale¿y go odinstalowaæ, jako ¿e
-pozostawienie plików instalacyjnych mog³oby byæ niebezpieczne.
+%description setup -l pl.UTF-8
+Ten pakiet naleÅ¼y zainstalowaÄ‡ w celu wstÄ™pnej konfiguracji MediaWiki
+po pierwszej instalacji. Potem naleÅ¼y go odinstalowaÄ‡, jako Å¼e
+pozostawienie plikÃ³w instalacyjnych mogÅ‚oby byÄ‡ niebezpieczne.
 
 %prep
 %setup -q
