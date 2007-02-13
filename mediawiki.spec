@@ -5,7 +5,7 @@
 %bcond_with	apidocs	# with apidocs. not finished
 #
 Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
-Summary(pl.UTF-8):   MediaWiki - oprogramowanie do wspólnej edycji, na którym działa Wikipedia
+Summary(pl.UTF-8):	MediaWiki - oprogramowanie do wspólnej edycji, na którym działa Wikipedia
 Name:		mediawiki
 Version:	1.9.1
 Release:	2
@@ -54,7 +54,7 @@ Wikipedia. Listę możliwości można znaleźć pod adresem:
 
 %package setup
 Summary:	MediaWiki setup package
-Summary(pl.UTF-8):   Pakiet do wstępnej konfiguracji MediaWiki
+Summary(pl.UTF-8):	Pakiet do wstępnej konfiguracji MediaWiki
 Group:		Applications/WWW
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 Requires:	php(posix)
