@@ -1,15 +1,15 @@
---- mediawiki-1.8.2/config/index.php~	2006-10-16 00:07:01.635048856 +0300
-+++ mediawiki-1.8.2/config/index.php	2006-10-16 00:12:29.902424333 +0300
-@@ -184,7 +184,7 @@
+--- mediawiki-1.12.0/config/index.php	2008-03-27 14:17:49.314569727 +0200
++++ mediawiki-1.12.0/config/index.php	2008-03-27 14:18:45.385792838 +0200
+@@ -196,7 +196,7 @@
  
  /* Check for existing configurations and bug out! */
  
 -if( file_exists( "../LocalSettings.php" ) ) {
-+if( file_exists( "/etc/webapps/mediawiki/LocalSettings.php" ) ) {
- 	dieout( "<p><strong>Setup has completed, <a href='../index.php'>your wiki</a> is configured.</strong></p>
++if( file_exists( "" ) ) {
+ 	$script = defined('MW_INSTALL_PHP5_EXT') ? 'index.php5' : 'index.php';
+  dieout( "<p><strong>Setup has completed, <a href='../$script'>your wiki</a> is configured.</strong></p>
  
- 	<p>Please delete the /config directory for extra security.</p></div></div></div></div>" );
-@@ -201,7 +201,7 @@
+@@ -214,7 +214,7 @@
  
  	<p>In order to configure the wiki you have to make the <tt>config</tt> subdirectory
  	writable by the web server. Once configuration is done you'll move the created
@@ -18,15 +18,15 @@
  	then remove the <tt>config</tt> subdirectory entirely.</p>
  
  	<p>To make the directory writable on a Unix/Linux system:</p>
-@@ -1229,7 +1229,7 @@
- it and uploading it again will hopefully change the ownership to a user ID specific to you.</p>
- EOT;
- 	} else {
--		echo "<p><span style='font-weight:bold;color:green;font-size:110%'>Installation successful!</span> Move the <tt>config/LocalSettings.php</tt> file into the parent directory, then follow
-+		echo "<p><span style='font-weight:bold;color:green;font-size:110%'>Installation successful!</span> Move the <tt>config/LocalSettings.php</tt> file into /etc/webapps/mediawiki directory, then follow
- 			<strong><a href='../index.php'>this link</a></strong> to your wiki.</p>\n";
- 	}
- }
+@@ -1471,7 +1471,7 @@
+ <div class="success-box">
+ <p>
+ <span class="success-message">Installation successful!</span>
+-Move the <tt>config/LocalSettings.php</tt> file to the parent directory, then follow
++Move the <tt>/etc/webapps/mediawiki/LocalSettings.php</tt> file to the parent directory, then follow
+ <a href="../$script"> this link</a> to your wiki.</p>
+ <p>You should change file permissions for <tt>LocalSettings.php</tt> as required to
+ prevent other users on the server reading passwords and altering configuration data.</p>
 --- mediawiki-1.8.2/includes/WebStart.php~	2006-10-14 03:06:33.000000000 +0300
 +++ mediawiki-1.8.2/includes/WebStart.php	2006-10-16 00:49:09.671858850 +0300
 @@ -65,7 +65,7 @@
