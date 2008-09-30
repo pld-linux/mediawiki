@@ -16,7 +16,7 @@ Source0:	http://download.wikimedia.org/mediawiki/1.13/%{name}-%{version}.tar.gz
 Source1:	%{name}.conf
 Patch0:		%{name}-mysqlroot.patch
 Patch1:		%{name}-confdir2.patch
-URL:		http://www.mediawiki.org
+URL:		http://www.mediawiki.org/
 BuildRequires:	sed >= 4.0
 %if %{with apidocs}
 BuildRequires:	php-cli
