@@ -1,15 +1,16 @@
---- mediawiki-1.12.0/config/index.php	2008-03-27 14:17:49.314569727 +0200
-+++ mediawiki-1.12.0/config/index.php	2008-03-27 14:18:45.385792838 +0200
-@@ -196,7 +196,7 @@
+diff -burNp mediawiki-1.13.1/config/index.php mediawiki-1.13.1-new/config/index.php
+--- mediawiki-1.13.1/config/index.php	2008-07-20 16:29:04.000000000 +0200
++++ mediawiki-1.13.1-new/config/index.php	2008-09-30 16:51:42.565158565 +0200
+@@ -209,7 +209,7 @@ $mainListOpened = false; # Is the main l
  
  /* Check for existing configurations and bug out! */
  
 -if( file_exists( "../LocalSettings.php" ) ) {
 +if( file_exists( "" ) ) {
  	$script = defined('MW_INSTALL_PHP5_EXT') ? 'index.php5' : 'index.php';
-  dieout( "<p><strong>Setup has completed, <a href='../$script'>your wiki</a> is configured.</strong></p>
- 
-@@ -214,7 +214,7 @@
+ 	dieout( "<p><strong>Setup has completed, <a href='../$script'>your wiki</a> is configured.</strong></p>
+ 	<p>Please delete the /config directory for extra security.</p>" );
+@@ -225,7 +225,7 @@ if( !is_writable( "." ) ) {
  
  	<p>In order to configure the wiki you have to make the <tt>config</tt> subdirectory
  	writable by the web server. Once configuration is done you'll move the created
@@ -18,7 +19,7 @@
  	then remove the <tt>config</tt> subdirectory entirely.</p>
  
  	<p>To make the directory writable on a Unix/Linux system:</p>
-@@ -1471,7 +1471,7 @@
+@@ -1489,7 +1489,7 @@ EOT;
  <div class="success-box">
  <p>
  <span class="success-message">Installation successful!</span>
@@ -27,29 +28,31 @@
  <a href="../$script"> this link</a> to your wiki.</p>
  <p>You should change file permissions for <tt>LocalSettings.php</tt> as required to
  prevent other users on the server reading passwords and altering configuration data.</p>
---- mediawiki-1.8.2/includes/WebStart.php~	2006-10-14 03:06:33.000000000 +0300
-+++ mediawiki-1.8.2/includes/WebStart.php	2006-10-16 00:49:09.671858850 +0300
-@@ -65,7 +65,7 @@
+diff -burNp mediawiki-1.13.1/includes/WebStart.php mediawiki-1.13.1-new/includes/WebStart.php
+--- mediawiki-1.13.1/includes/WebStart.php	2008-06-16 22:21:26.000000000 +0200
++++ mediawiki-1.13.1-new/includes/WebStart.php	2008-09-30 16:56:46.191001676 +0200
+@@ -84,7 +84,7 @@ require_once( "$IP/includes/Defines.php"
  # LocalSettings.php is the per site customization file. If it does not exit
  # the wiki installer need to be launched or the generated file moved from
  # ./config/ to ./
--if( !file_exists( './LocalSettings.php' ) ) {
-+if( !file_exists( '/etc/webapps/mediawiki/LocalSettings.php' ) ) {
- 	$IP = '.';
- 	require_once( './includes/DefaultSettings.php' ); # used for printing the version
- 	require_once( './includes/templates/NoLocalSettings.php' );
-@@ -73,7 +73,7 @@
- }
+-if( !file_exists( "$IP/LocalSettings.php" ) ) {
++if( !file_exists( "/etc/webapps/mediawiki/LocalSettings.php" ) ) {
+ 	require_once( "$IP/includes/DefaultSettings.php" ); # used for printing the version
+ 	require_once( "$IP/includes/templates/NoLocalSettings.php" );
+ 	die();
+@@ -94,7 +94,7 @@ if( !file_exists( "$IP/LocalSettings.php
+ require_once( "$IP/includes/AutoLoader.php" );
  
- # Include this site setttings
--require_once( './LocalSettings.php' );
-+require_once( '/etc/webapps/mediawiki/LocalSettings.php' );
+ # Include site settings. $IP may be changed (hopefully before the AutoLoader is invoked)
+-require_once( "$IP/LocalSettings.php" );
++require_once( "/etc/webapps/mediawiki/LocalSettings.php" );
  wfProfileOut( 'WebStart.php-conf' );
  
- if ( !defined( 'MW_NO_SETUP' ) ) {
---- mediawiki-1.8.2/maintenance/archives/upgradeWatchlist.php~	2006-10-14 03:05:57.000000000 +0300
-+++ mediawiki-1.8.2/maintenance/archives/upgradeWatchlist.php	2006-10-16 00:50:36.273804990 +0300
-@@ -15,7 +15,7 @@
+ wfProfileIn( 'WebStart.php-ob_start' );
+diff -burNp mediawiki-1.13.1/maintenance/archives/upgradeWatchlist.php mediawiki-1.13.1-new/maintenance/archives/upgradeWatchlist.php
+--- mediawiki-1.13.1/maintenance/archives/upgradeWatchlist.php	2008-07-11 00:00:04.000000000 +0200
++++ mediawiki-1.13.1-new/maintenance/archives/upgradeWatchlist.php	2008-09-30 16:59:14.399305603 +0200
+@@ -15,7 +15,7 @@ exit();
  # Convert watchlists to new format
  
  global $IP;
