@@ -8,7 +8,7 @@ Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl.UTF-8):	MediaWiki - oprogramowanie do wspólnej edycji, na którym działa Wikipedia
 Name:		mediawiki
 Version:	1.13.5
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://download.wikimedia.org/mediawiki/1.13/%{name}-%{version}.tar.gz
@@ -25,15 +25,16 @@ BuildRequires:	php-pear-PhpDocumentor
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires:	php(mysql)
 Requires:	php(pcre)
+Requires:	php(session)
 Requires:	php(xml)
 Requires:	php-common >= 4:5.0
 # includes/UserMailer.php:
 #Requires:	php-pear-Mail
 # Optional
-#Suggests:	ImageMagick or php-gd for thumbnails
-#Suggests:	php-zlib
-#Suggests:	php-mmcache || php4-mmcache
 Requires:	webapps
+#Suggests:	ImageMagick or php-gd for thumbnails
+#Suggests:	php-mmcache || php4-mmcache
+#Suggests:	php-zlib
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
