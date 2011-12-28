@@ -7,15 +7,14 @@
 Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl.UTF-8):	MediaWiki - oprogramowanie do wspólnej edycji, na którym działa Wikipedia
 Name:		mediawiki
-Version:	1.13.5
-Release:	2
+Version:	1.18.0
+Release:	0
 License:	GPL
 Group:		Applications/WWW
-Source0:	http://download.wikimedia.org/mediawiki/1.13/%{name}-%{version}.tar.gz
-# Source0-md5:	057d7c2a709f14f3806717695ed41b22
+Source0:	http://download.wikimedia.org/mediawiki/1.18/%{name}-%{version}.tar.gz
+# Source0-md5:	21d2560ff1a71a309c786c753931abe0
 Source1:	%{name}.conf
-Patch0:		%{name}-mysqlroot.patch
-Patch1:		%{name}-confdir2.patch
+Patch0:		%{name}-confdir2.patch
 URL:		http://www.mediawiki.org/
 BuildRequires:	sed >= 4.0
 %if %{with apidocs}
@@ -37,6 +36,8 @@ Requires:	webapps
 #Suggests:	php-zlib
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_noautoreq	^/usr/bin/hphpi$
 
 %define		_appdir		%{_datadir}/%{name}
 %define		_webapps	/etc/webapps
@@ -73,7 +74,6 @@ pozostawienie plików instalacyjnych mogłoby być niebezpieczne.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 find -name '*.php5' | xargs rm -v
@@ -82,10 +82,8 @@ find -name '*.php5' | xargs rm -v
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}}
 
-cp -a config extensions images includes languages maintenance math skins $RPM_BUILD_ROOT%{_appdir}
-cp -a AdminSettings.sample $RPM_BUILD_ROOT%{_sysconfdir}/AdminSettings.php
-
-cp *.php install-utils.inc $RPM_BUILD_ROOT%{_appdir}
+cp -a mw-config extensions images includes languages maintenance resources skins $RPM_BUILD_ROOT%{_appdir}
+cp *.php $RPM_BUILD_ROOT%{_appdir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
@@ -186,24 +184,22 @@ EOF
 
 %files
 %defattr(644,root,root,755)
-%doc docs FAQ HISTORY INSTALL README RELEASE-NOTES UPGRADE *.sample tests
+%doc docs FAQ HISTORY INSTALL README RELEASE-NOTES-1.18 UPGRADE *.sample tests
 %dir %attr(750,root,http) %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf
-%attr(640,root,http) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/AdminSettings.php
 
 %dir %{_appdir}
 %{_appdir}/*.php
 %{_appdir}/languages
-%{_appdir}/math
 %{_appdir}/images
 %{_appdir}/extensions
+%{_appdir}/resources
 %{_appdir}/skins
 %{_appdir}/includes
 %{_appdir}/maintenance
 
 %files setup
 %defattr(644,root,root,755)
-%dir %attr(775,root,http) %{_appdir}/config
-%{_appdir}/install-utils.inc
-%{_appdir}/config/index.php
+%dir %attr(775,root,http) %{_appdir}/mw-config
+%{_appdir}/mw-config/index.php
