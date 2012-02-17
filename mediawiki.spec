@@ -8,7 +8,7 @@ Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl.UTF-8):	MediaWiki - oprogramowanie do wspólnej edycji, na którym działa Wikipedia
 Name:		mediawiki
 Version:	1.18.1
-Release:	0
+Release:	1
 License:	GPL
 Group:		Applications/WWW
 Source0:	http://download.wikimedia.org/mediawiki/1.18/%{name}-%{version}.tar.gz
@@ -40,6 +40,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_noautoreq	^/usr/bin/hphpi$
 
 %define		_appdir		%{_datadir}/%{name}
+%define		_vardir		%{_sharedstatedir}/%{name}
 %define		_webapps	/etc/webapps
 %define		_webapp		%{name}
 %define		_sysconfdir	%{_webapps}/%{_webapp}
@@ -80,10 +81,14 @@ find -name '*.php5' | xargs rm -v
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir}}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_appdir},%{_vardir}}
 
-cp -a mw-config extensions images includes languages maintenance resources skins $RPM_BUILD_ROOT%{_appdir}
+cp -a mw-config extensions includes languages maintenance resources skins $RPM_BUILD_ROOT%{_appdir}
+cp -a cache images $RPM_BUILD_ROOT%{_vardir}
 cp *.php $RPM_BUILD_ROOT%{_appdir}
+
+ln -s %{_vardir}/cache $RPM_BUILD_ROOT%{_appdir}
+ln -s %{_vardir}/images $RPM_BUILD_ROOT%{_appdir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
@@ -192,12 +197,20 @@ EOF
 %dir %{_appdir}
 %{_appdir}/*.php
 %{_appdir}/languages
+%{_appdir}/cache
 %{_appdir}/images
 %{_appdir}/extensions
 %{_appdir}/resources
 %{_appdir}/skins
 %{_appdir}/includes
 %{_appdir}/maintenance
+
+%dir %attr(750,root,http) %{_vardir}
+%dir %attr(770,root,http) %{_vardir}/cache
+%{_vardir}/cache/.htaccess
+%dir %attr(770,root,http) %{_vardir}/images
+%{_vardir}/images/.htaccess
+%{_vardir}/images/README
 
 %files setup
 %defattr(644,root,root,755)
