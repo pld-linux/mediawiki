@@ -7,12 +7,12 @@
 Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl.UTF-8):	MediaWiki - oprogramowanie do wspólnej edycji, na którym działa Wikipedia
 Name:		mediawiki
-Version:	1.18.4
-Release:	2
+Version:	1.20.2
+Release:	1
 License:	GPL v2
 Group:		Applications/WWW
-Source0:	http://download.wikimedia.org/mediawiki/1.18/%{name}-%{version}.tar.gz
-# Source0-md5:	2af91f83e4a83da15de332e8b309cf7a
+Source0:	http://download.wikimedia.org/mediawiki/1.20/%{name}-%{version}.tar.gz
+# Source0-md5:	0b3f7a30e217e794138e52b276eb1e4f
 Source1:	%{name}.conf
 Patch0:		%{name}-confdir2.patch
 URL:		http://www.mediawiki.org/
@@ -189,7 +189,7 @@ EOF
 
 %files
 %defattr(644,root,root,755)
-%doc docs FAQ HISTORY INSTALL README RELEASE-NOTES-1.18 UPGRADE *.sample tests
+%doc docs FAQ HISTORY INSTALL README RELEASE-NOTES-1.20 UPGRADE *.sample
 %dir %attr(750,root,http) %{_sysconfdir}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/apache.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/httpd.conf
@@ -216,3 +216,4 @@ EOF
 %defattr(644,root,root,755)
 %dir %attr(775,root,http) %{_appdir}/mw-config
 %{_appdir}/mw-config/index.php
+%{_appdir}/mw-config/overrides.php
