@@ -8,12 +8,13 @@ Summary:	MediaWiki - the collaborative editing software that runs Wikipedia
 Summary(pl.UTF-8):	MediaWiki - oprogramowanie do wspólnej edycji, na którym działa Wikipedia
 Name:		mediawiki
 Version:	1.20.4
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/WWW
 Source0:	http://download.wikimedia.org/mediawiki/1.20/%{name}-%{version}.tar.gz
 # Source0-md5:	ad0e4c2319bc80713da2b8bf74091c3f
-Source1:	%{name}.conf
+Source1:	%{name}-apache.conf
+Source2:	%{name}-httpd.conf
 Patch0:		%{name}-confdir2.patch
 URL:		http://www.mediawiki.org/
 BuildRequires:	sed >= 4.0
@@ -34,6 +35,7 @@ Requires:	webapps
 #Suggests:	ImageMagick or php-gd for thumbnails
 #Suggests:	php-mmcache || php4-mmcache
 #Suggests:	php-zlib
+Conflicts:	apache-base < 2.4.0-1
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -91,7 +93,7 @@ ln -s %{_vardir}/cache $RPM_BUILD_ROOT%{_appdir}
 ln -s %{_vardir}/images $RPM_BUILD_ROOT%{_appdir}
 
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/apache.conf
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/httpd.conf
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -114,10 +116,10 @@ fi
 %triggerun -- apache1 < 1.3.37-3, apache1-base
 %webapp_unregister apache %{_webapp}
 
-%triggerin -- apache < 2.2.0, apache-base
+%triggerin -- apache-base
 %webapp_register httpd %{_webapp}
 
-%triggerun -- apache < 2.2.0, apache-base
+%triggerun -- apache-base
 %webapp_unregister httpd %{_webapp}
 
 %triggerpostun -- %{name} < 1.5.3-0.2
