@@ -76,7 +76,7 @@ pozostawienie plików instalacyjnych mogłoby być niebezpieczne.
 
 %prep
 %setup -q
-%patch0 -p1
+%patch -P0 -p1
 
 find '(' -name '*~' -o -name '*.orig' ')' | xargs -r rm -v
 find -name '*.php5' | xargs rm -v
